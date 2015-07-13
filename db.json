@@ -34,6 +34,12 @@
       "userId": 1,
       "tweetId": 5,
       "message": "@therealklanni What up!"
+    },
+    {
+      "userId": 1,
+      "tweetId": 5,
+      "message": "Hey guys!",
+      "id": 4
     }
   ],
   "users": [

@@ -27,7 +27,7 @@ gulp.task('watch', function() {
   return gulp.watch(['./js/*.js', '!./js/bundle.js'], ['build']);
 });
 
-gulp.task('uglify', function() {
+gulp.task('uglify', ['build'], function() {
   return gulp.src('./js/bundle.js')
     .pipe(uglify())
     .pipe(gulp.dest('js'));
@@ -47,7 +47,7 @@ var bundler = browserify({
 bundler.transform(hbsfy);
 bundler.on('log', gutil.log); // output build logs to terminal
 
-gulp.task('build', ['clean', 'uglify'], function () {
+gulp.task('build', ['clean'], function () {
   return bundler.bundle()
     // log errors if they happen
     .on('error', gutil.log.bind(gutil, 'Browserify Error'))

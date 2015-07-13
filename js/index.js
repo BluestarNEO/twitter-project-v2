@@ -21,8 +21,8 @@ $(function () {
     loadTweets();
 
     // Expand textareas for composing
-    $('#main').on('click', 'textarea', function() {
-        $(this).parent().addClass('expand');
+    $('#main').on('click', 'form', function() {
+        $(this).addClass('expand');
     })
 
     // Expand original tweets
@@ -124,19 +124,11 @@ $(function () {
     function loadTweets() {
          $.getJSON(tweetsUrl)
             .done(function(tweets) {
-                var index = 0;
-                var sortId = [];
-                for (var i = 0; i < tweets.length; i++) {
-                    sortId.push(tweets[i].userId);
-                }
                 tweets.forEach(function(tweet) {
-                    var userId = sortId[index]
-                    $.getJSON(usersUrl + userId)
-                        .done(function(tweetUser) {
+                    console.log(tweet.userId);
+                    $.getJSON(usersUrl + tweet.userId, function(tweetUser) {
                             $('#tweets').append(renderThread(tweetUser, tweet.message, tweet.id));                            
-                        });
-                        console.log(index);
-                        index++; 
+                        }); 
                })
             })
 
