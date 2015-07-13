@@ -125,10 +125,9 @@ $(function () {
          $.getJSON(tweetsUrl)
             .done(function(tweets) {
                 tweets.forEach(function(tweet) {
-                    console.log(tweet.userId);
                     $.getJSON(usersUrl + tweet.userId, function(tweetUser) {
                             $('#tweets').append(renderThread(tweetUser, tweet.message, tweet.id));                            
-                        }); 
+                        });
                })
             })
 
