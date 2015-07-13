@@ -125,14 +125,18 @@ $(function () {
          $.getJSON(tweetsUrl)
             .done(function(tweets) {
                 var userArray = [];
+                var count = 0;
                 tweets.forEach(function(tweet) {
                     $.getJSON(usersUrl + tweet.userId, function(tweetUser) {
-                            userArray.push(tweet);
-                            $('#tweets').append(renderThread(tweetUser, tweet.message, tweet.id));                            
-                        });
-                    console.log(userArray);
-               })
-            })
+                        userArray.push(tweet);
+                            // $('#tweets').append(renderThread(tweetUser, tweet.message, tweet.id));
+                            console.log(userArray);
+                            userArray.sort(function(a,b) { a[count].id - b[count].id})
+                            console.log(userArray[count].id)
+                            count++;                            
+                        })
+                   }) 
+            }) 
 
         $.getJSON(usersUrl)
             .done(function(users) {
