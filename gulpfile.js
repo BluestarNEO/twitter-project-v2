@@ -8,11 +8,15 @@ var jshint = require('gulp-jshint');
 var del = require('del');
 
 
-gulp.task('default', function() {
+gulp.task('default', ['lint'], function() {
+  
+});
+
+gulp.task('lint', function() {
   return gulp.src('./js/*.js')
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
-});
+})
 
 gulp.task('clean', function(cb) {
     del('./js/bundle.js', cb);

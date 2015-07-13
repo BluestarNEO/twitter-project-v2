@@ -14,11 +14,6 @@
       "id": 5,
       "userId": 2,
       "message": "Yo!"
-    },
-    {
-      "id": 6,
-      "userId": 1,
-      "message": "let's tweet this!"
     }
   ],
   "replies": [
@@ -39,6 +34,18 @@
       "userId": 1,
       "tweetId": 5,
       "message": "@therealklanni What up!"
+    },
+    {
+      "userId": 1,
+      "tweetId": 1,
+      "message": "let's test this",
+      "id": 4
+    },
+    {
+      "userId": 1,
+      "tweetId": 2,
+      "message": "well I don't",
+      "id": 5
     }
   ],
   "users": [

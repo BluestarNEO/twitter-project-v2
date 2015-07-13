@@ -1,7 +1,7 @@
 'use strict'
 
 
-var template = require('./template');
+var template = require('./template.js');
 var $ = require('jquery');
 
 var currentUser = {
@@ -18,16 +18,28 @@ $(function () {
     var usersUrl = "http://localhost:3000/users/";
 
     (function() {
-        $.getJSON(usersUrl)
-            .done(function(users) {
-                users.forEach(function(user) {
-                    $.getJSON(usersUrl + user.id + '/tweets')
-                        .done(function(tweets) {
-                            tweets.forEach(function(tweet) {
-                                $('#tweets').append(renderThread(user, tweet.message, tweet.id));
-                            })
-                        })
-                })
+         $.getJSON(tweetsUrl)
+            .done(function(tweets) {
+                var count = 0;
+                var sorted = [];
+                for (var i = 0; i < tweets.length; i++) {
+                    sorted.push(tweets[i].userId);
+                }
+                var assn = sorted[count]
+                // console.log(sorted);
+                // console.log('sorted 2:' + sorted[2]);
+                tweets.forEach(function(tweet) {
+                    
+                    $.getJSON(usersUrl + assn)
+                        .done(function(tweetUser) {
+                            console.log(sorted[count])
+                            console.log(assn)
+                            // console.log(count);
+                            console.log(tweetUser);
+                            $('#tweets').append(renderThread(tweetUser, tweet.message, tweet.id));
+                            count ++;
+                        })       
+               })
             })
 
         $.getJSON(usersUrl)
@@ -43,84 +55,43 @@ $(function () {
                         })
                 })
             })
+
     }());
-    
+
     // Expand textareas for composing
     $('#main').on('click', 'textarea', function() {
-        $(this).parent().addClass('expand')
-    });
+        $(this).parent().addClass('expand');
+    })
 
     // Expand original tweets
     $('#tweets').on('click', '.thread > .tweet', function() {
         $(this).parent('.thread').toggleClass('expand');
-    });  
+    })  
 
-    var tweetsPrimaryId = 6;  //default new id for tweets from default db is 6 - testing only
-    var repliesPrimaryId = 4; //default new id for replies from default db is 4 -testing only
-    var usersPrimaryId = 4; //default new id for users from default db is 4 - testing only
-
-     $('#main').on('click', '.compose button', function() {
+    // Compose Function when user creates a tweet
+    $('#main').on('click', '.compose button', function() {
         var $message = $(this).parents('.compose').find('textarea').val();
+        var $parent = $(this).parent();
+        var id = 55;
 
-        if($('textarea').parent('header')){
-            $.post('http://localhost:3000/tweets', {
-                "id": tweetsPrimaryId,
-                "userId": currentUser.id,
-                "message": $message
-            }).done(function() {
-                console.log('posted');
-                //renderThread(tweets, users);
-            })
+        console.log($message);
+    
+        if($('textarea').parent('header').length == 1) {
+            console.log('here it is!');
+            // renderThread(currentUser, $message, id);
+            postTweet(currentUser, $message, tweetsUrl);
         } else {
-            var tweetId = $(this).parents('.tweet').attr('id');
-            $.post('http://localhost:3000/replies', {
-                "id": repliesPrimaryId,
-                "userId": currentUser.id,
-                "tweetId": tweetId,
-                "message": $message
-            }).done(function() {
-                console.log('tweet posted');
-            });
+            var tweetId = $(this).parents('.thread').find('.tweet').attr('id');
+            postReply(currentUser, $message, repliesUrl, tweetId);
         }
 
-        tweetsPrimaryId++;
-        repliesPrimaryId++;
+        $message = $parent.siblings('textarea').val('');   // resets textarea entry
+        $(this).parents('.compose').removeClass('expand'); // remove class 'expand' to close compose div
+        $(this).prev('.count').text(140);                  // resets message character count to 140
 
         return false;
+    });
 
-    })
-
-    // Old code to use as a starting point
-
-    // $('main').on('click', '.compose button', function() {
-    //     var message = $(this).parent().siblings('textarea').val();
-    //     var parent = $(this).parent();
-
-    //     var tweet = template.renderTweet(currentUser, message);
-    //     $(this).parents('.replies').append(tweet);
-    
-    //     // if($(this).parents('header').length == 1) {
-    //     //     renderThread(User, $message);
-    //     // } else {
-    //     //     var tweet = renderTweet(User, $message);
-    //     //     $(this).parents('.replies').append(tweet);
-    //     // }
-
-    //     message = parent.siblings('textarea').val('');   // resets textarea entry
-    //     $(this).parents('.compose').removeClass('expand'); // remove class 'expand' to close compose div
-    //     $(this).prev('.count').text(140);                  // resets message character count to 140
-
-    //     return false;
-    // })
-    
-    // var endpoint = ['users', 'tweets', 'replies'];
-
-
-    // for (var i = 0; i < endpoint.length; i++){
-    //     $.get('http://localhost:3000/' + endpoint[i]).done(function(data){
-    //         console.log(data);
-    //     })
-    // }
 
     // render out tweet body
     function renderTweet(user, message, id) {
@@ -149,6 +120,28 @@ $(function () {
                     });
 
         return html;
+    }
+
+    function postTweet(user, message, url) {
+        $.post(tweetsUrl, {
+            userId: user.id,
+            message: message
+        }).done(function(data) {
+            var html = renderTweet(user, data.message, data.id);
+            $('#tweets').append(html);
+        })
+    }
+
+    function postReply(user, message, url, tweetId) {
+        $.post(repliesUrl, {
+            userId: user.id,
+            tweetId: tweetId.slice(6),
+            message: message
+        }).done(function(data) {
+            console.log(data);
+            var html = renderTweet(user, data.message, data.id);
+            $('#' + tweetId).siblings('.replies').append(html);
+        })
     }
 
 });
