@@ -4,14 +4,14 @@
 var template = require('./template.js');
 var $ = require('jquery');
 
-var currentUser = {
-    id: 1,
-    img: '../images/brad.png',
-    handle: '@bradwestfall',
-    realName: 'Brad Westfall'
-};
-
 $(function () {
+
+    // var currentUser = {
+    //     id: 1,
+    //     img: '../images/brad.png',
+    //     handle: '@bradwestfall',
+    //     realName: 'Brad Westfall'
+    // };
 
     var repliesUrl = "http://localhost:3000/replies/";
     var tweetsUrl = "http://localhost:3000/tweets/";
@@ -19,6 +19,20 @@ $(function () {
 
     // Load existing database content on page
     loadTweets();
+    loadUsers();
+
+    // var currentUser = $('#user-select').val();
+    // console.log(currentUser);
+
+    $('#user-select').change(function() {
+        var currentUser = $('#user-select').val();
+
+        $.getJSON(usersUrl + currentUser)
+            .done(function(userData) {
+
+            });
+
+    })
 
     // Expand textareas for composing
     $('#main').on('click', 'form', function() {
@@ -145,5 +159,15 @@ $(function () {
                 })
             })
     };
+
+    function loadUsers() {
+        $.getJSON(usersUrl) 
+            .done(function(users) {
+                users.forEach(function(user) {
+                    $('#user-select').append('<option value ="' + user.id + '">' + user.handle + '</option>')
+                    return user;
+                })
+            })
+    }
 
 });
