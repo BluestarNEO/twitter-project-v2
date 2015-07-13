@@ -124,10 +124,13 @@ $(function () {
     function loadTweets() {
          $.getJSON(tweetsUrl)
             .done(function(tweets) {
+                var userArray = [];
                 tweets.forEach(function(tweet) {
                     $.getJSON(usersUrl + tweet.userId, function(tweetUser) {
+                            userArray.push(tweet);
                             $('#tweets').append(renderThread(tweetUser, tweet.message, tweet.id));                            
                         });
+                    console.log(userArray);
                })
             })
 
