@@ -17,46 +17,8 @@ $(function () {
     var tweetsUrl = "http://localhost:3000/tweets/";
     var usersUrl = "http://localhost:3000/users/";
 
-    (function() {
-         $.getJSON(tweetsUrl)
-            .done(function(tweets) {
-                var count = 0;
-                var sorted = [];
-                for (var i = 0; i < tweets.length; i++) {
-                    sorted.push(tweets[i].userId);
-                }
-                var assn = sorted[count]
-                // console.log(sorted);
-                // console.log('sorted 2:' + sorted[2]);
-                tweets.forEach(function(tweet) {
-                    
-                    $.getJSON(usersUrl + assn)
-                        .done(function(tweetUser) {
-                            console.log(sorted[count])
-                            console.log(assn)
-                            // console.log(count);
-                            console.log(tweetUser);
-                            $('#tweets').append(renderThread(tweetUser, tweet.message, tweet.id));
-                            count ++;
-                        })       
-               })
-            })
-
-        $.getJSON(usersUrl)
-            .done(function(users) {
-                users.forEach(function(user) {
-                    $.getJSON(usersUrl  +  user.id + '/replies')
-                        .done(function(replies){
-                            replies.forEach(function(reply) {
-                                var search = '#tweets #tweet-' + reply.tweetId;
-                                $(search).siblings('.replies')
-                                    .append(renderTweet(user, reply.message, reply.id));
-                            })
-                        })
-                })
-            })
-
-    }());
+    // Load existing database content on page
+    loadTweets();
 
     // Expand textareas for composing
     $('#main').on('click', 'textarea', function() {
@@ -72,13 +34,8 @@ $(function () {
     $('#main').on('click', '.compose button', function() {
         var $message = $(this).parents('.compose').find('textarea').val();
         var $parent = $(this).parent();
-        var id = 55;
-
-        console.log($message);
     
-        if($('textarea').parent('header').length == 1) {
-            console.log('here it is!');
-            // renderThread(currentUser, $message, id);
+        if($(this).parents('header').length) {
             postTweet(currentUser, $message, tweetsUrl);
         } else {
             var tweetId = $(this).parents('.thread').find('.tweet').attr('id');
@@ -92,6 +49,24 @@ $(function () {
         return false;
     });
 
+    // Character count decrementer and stylings
+    $('#main').on('keyup', 'textarea', function() {
+        var $msgCount = $(this).val().length;
+        var $limitCount = $('textarea').siblings('div').children('.count');
+
+        $limitCount.text(140 - ($msgCount));
+
+        if ($msgCount > 140) {
+            $limitCount.css({"color": "red", "background-color": "pink"});
+            $(this).css({"color": "red"});
+            $(this).siblings('div').children('button').attr('disabled', true).css({"background-color": "rgba(46,154,194,0.4)"});
+
+        } else {
+            $limitCount.css({"color": "#777", "background-color": "transparent"});
+            $(this).css({"color": "#777"});
+            $(this).siblings('div').children('button').attr('disabled', false).css({"background-color": "#2E9AC2"});
+        }
+    })
 
     // render out tweet body
     function renderTweet(user, message, id) {
@@ -122,26 +97,62 @@ $(function () {
         return html;
     }
 
+    // post original tweet and render out new thread
     function postTweet(user, message, url) {
         $.post(tweetsUrl, {
             userId: user.id,
             message: message
         }).done(function(data) {
-            var html = renderTweet(user, data.message, data.id);
+            var html = renderThread(user, data.message, data.id);
             $('#tweets').append(html);
         })
     }
 
+    // post reply and render out reply tweet
     function postReply(user, message, url, tweetId) {
         $.post(repliesUrl, {
             userId: user.id,
             tweetId: tweetId.slice(6),
             message: message
         }).done(function(data) {
-            console.log(data);
             var html = renderTweet(user, data.message, data.id);
             $('#' + tweetId).siblings('.replies').append(html);
         })
     }
+
+    // load tweets and replies already stored in db.json
+    function loadTweets() {
+         $.getJSON(tweetsUrl)
+            .done(function(tweets) {
+                var index = 0;
+                var sortId = [];
+                for (var i = 0; i < tweets.length; i++) {
+                    sortId.push(tweets[i].userId);
+                }
+                tweets.forEach(function(tweet) {
+                    var userId = sortId[index]
+                    $.getJSON(usersUrl + userId)
+                        .done(function(tweetUser) {
+                            $('#tweets').append(renderThread(tweetUser, tweet.message, tweet.id));                            
+                        });
+                        console.log(index);
+                        index++; 
+               })
+            })
+
+        $.getJSON(usersUrl)
+            .done(function(users) {
+                users.forEach(function(user) {
+                    $.getJSON(usersUrl  +  user.id + '/replies')
+                        .done(function(replies) {
+                            replies.forEach(function(reply) {
+                                var search = '#tweets #tweet-' + reply.tweetId;
+                                $(search).siblings('.replies')
+                                    .append(renderTweet(user, reply.message, reply.id));
+                            })
+                        })
+                })
+            })
+    };
 
 });

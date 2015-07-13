@@ -6,6 +6,7 @@ var gutil = require('gulp-util');
 // Add your require statements and gulp tasks here
 var jshint = require('gulp-jshint');
 var del = require('del');
+var uglify = require('gulp-uglify');
 
 
 gulp.task('default', ['lint'], function() {
@@ -19,12 +20,19 @@ gulp.task('lint', function() {
 })
 
 gulp.task('clean', function(cb) {
-    del('./js/bundle.js', cb);
+  del('./js/bundle.js', cb);
 });
 
 gulp.task('watch', function() {
-    return gulp.watch(['./js/*.js', '!./js/bundle.js'], ['build']);
+  return gulp.watch(['./js/*.js', '!./js/bundle.js'], ['build']);
 });
+
+gulp.task('uglify', function() {
+  return gulp.src('./js/bundle.js')
+    .pipe(uglify())
+    .pipe(gulp.dest('js'));
+})
+
 
 // Browserify
 var source = require('vinyl-source-stream');
@@ -39,7 +47,7 @@ var bundler = browserify({
 bundler.transform(hbsfy);
 bundler.on('log', gutil.log); // output build logs to terminal
 
-gulp.task('build', ['clean'], function () {
+gulp.task('build', ['clean', 'uglify'], function () {
   return bundler.bundle()
     // log errors if they happen
     .on('error', gutil.log.bind(gutil, 'Browserify Error'))
