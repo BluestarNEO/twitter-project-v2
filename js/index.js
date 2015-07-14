@@ -71,23 +71,18 @@ $(function () {
         console.log(currentUser);
         console.log('what');
 
-        if(currentUser.isEmptyObject({})){
-            $('#main').find('button').each(function() {
-                $(this).prop('disabled', true).css({"background-color": "#2E9AC2"});
-                console.log(this);
-            })
-        } else {
-            if ($msgCount > 140) {
-                $limitCount.css({"color": "red", "background-color": "pink"});
-                $(this).css({"color": "red"});
-                $(this).siblings('div').children('button').attr('disabled', true).css({"background-color": "rgba(46,154,194,0.4)"});
+        
+        if ($msgCount > 140) {
+            $limitCount.css({"color": "red", "background-color": "pink"});
+            $(this).css({"color": "red"});
+            $(this).siblings('div').children('button').attr('disabled', true).css({"background-color": "rgba(46,154,194,0.4)"});
 
-            } else {
-                $limitCount.css({"color": "#777", "background-color": "transparent"});
-                $(this).css({"color": "#777"});
-                $(this).siblings('div').children('button').attr('disabled', false).css({"background-color": "#2E9AC2"});
-            }
+        } else {
+            $limitCount.css({"color": "#777", "background-color": "transparent"});
+            $(this).css({"color": "#777"});
+            $(this).siblings('div').children('button').attr('disabled', false).css({"background-color": "#2E9AC2"});
         }
+        
     })
 
     // render out tweet body
