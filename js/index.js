@@ -16,10 +16,6 @@ $(function () {
     loadTweets();
     loadUsers();
 
-    // if (currentUser.isEmptyObject({})) {
-    //     $('button').attr('disabled', true);
-    // }
-
     $('#user-select').change(function() {
         var userSelected = $('#user-select').val();
         console.log(userSelected);
@@ -27,7 +23,7 @@ $(function () {
             .done(function(data) {
                 currentUser = data;
                 console.log(currentUser);
-            })
+            });
      });
 
     console.log(currentUser);
@@ -35,12 +31,12 @@ $(function () {
     // Expand textareas for composing
     $('#main').on('click', 'form', function() {
         $(this).addClass('expand');
-    })
+    });
 
     // Expand original tweets
     $('#tweets').on('click', '.thread > .tweet', function() {
         $(this).parent('.thread').toggleClass('expand');
-    })  
+    });  
 
     // Compose Function when user creates a tweet             // // // This doesn't work
     $('#main').on('click', '.compose button', function() {
@@ -121,7 +117,7 @@ $(function () {
         }).done(function(data) {
             var html = renderThread(user, data.message, data.id);
             $('#tweets').append(html);
-        })
+        });
     }
 
     // post reply and render out reply tweet
@@ -133,7 +129,7 @@ $(function () {
         }).done(function(data) {
             var html = renderTweet(user, data.message, data.id);
             $('#' + tweetId).siblings('.replies').append(html);
-        })
+        });
     }
 
     // load tweets and replies already stored in db.json
@@ -144,8 +140,8 @@ $(function () {
                     $.getJSON(usersUrl + tweet.userId, function(tweetUser) {
                             $('#tweets').append(renderThread(tweetUser, tweet.message, tweet.id));                            
                         });
-               })
-            })
+               });
+            });
 
         $.getJSON(usersUrl)
             .done(function(users) {
@@ -156,10 +152,10 @@ $(function () {
                                 var search = '#tweets #tweet-' + reply.tweetId;
                                 $(search).siblings('.replies')
                                     .append(renderTweet(user, reply.message, reply.id));
-                            })
-                        })
-                })
-            })
+                            });
+                        });
+                });
+            });
     };
 
     // load all users into a select/option input and assign their corresponding ids as values
@@ -170,8 +166,8 @@ $(function () {
                 users.forEach(function(user) {
                     $('#user-select').append('<option value ="' + user.id + '">' + user.handle + '</option>')
                     return user;
-                })
-            })
+                });
+            });
     }
 
     // Create new user in the database
@@ -183,7 +179,7 @@ $(function () {
         }).fail(function(err){
             alert(err);
             console.log('There was a problem creating a new user');
-        })
+        });
     }
 
     // manually update tweet
@@ -196,7 +192,7 @@ $(function () {
                 userId: userId,
                 message: message
             }
-        })
+        });
     }
 
     // manually update reply
@@ -210,7 +206,7 @@ $(function () {
                 tweetId: tweetId,
                 message: message
             }
-        })
+        });
     }
 
 });
