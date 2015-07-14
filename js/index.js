@@ -28,6 +28,11 @@ $(function () {
     // Expand textareas for composing
     $('#main').on('click', 'form', function() {
         $(this).addClass('expand');
+        if ($.isEmptyObject(currentUser)) {
+            $(this).find('button').attr('disabled', true).css({"background-color": "rgba(46,154,194,0.4)"});
+        } else {
+            $(this).find('button').attr('disabled', false).css({"background-color": "#2E9AC2"});
+        }
     });
 
     // Expand original tweets
@@ -35,7 +40,7 @@ $(function () {
         $(this).parent('.thread').toggleClass('expand');
     });  
 
-    // Compose Function when user creates a tweet             // // // This doesn't work
+    // Compose Function when user creates a tweet
     $('#main').on('click', '.compose button', function() {
         var $message = $(this).parents('.compose').find('textarea').val();
         var $parent = $(this).parent();
