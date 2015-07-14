@@ -9,7 +9,6 @@ var del = require('del');
 var uglify = require('gulp-uglify');
 var browserSync = require('browser-sync').create();
 
-
 gulp.task('default', ['lint'], function() {
   
 });
@@ -44,7 +43,6 @@ gulp.task('browser-sync', function() {
         reloadDelay: 1000
     });
 });
-
 
 // Browserify
 var source = require('vinyl-source-stream');
