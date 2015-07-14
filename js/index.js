@@ -12,7 +12,7 @@ $(function () {
     var tweetsUrl = "http://localhost:3000/tweets/";
     var usersUrl = "http://localhost:3000/users/";
 
-    console.log('reload works!');
+    console.log('testing this');
 
     // Load existing database content on page
     loadTweets();

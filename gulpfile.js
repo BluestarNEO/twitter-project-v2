@@ -25,7 +25,7 @@ gulp.task('clean', function(cb) {
 });
 
 gulp.task('watch', ['browser-sync'], function() {
-  return gulp.watch(['./js/*.js', '!./js/bundle.js'], ['js-watch']);
+  return gulp.watch(['./js/*.js', '!.js/bundle.js'], ['js-watch']);
 });
 
 gulp.task('uglify', ['build'], function() {
@@ -40,7 +40,8 @@ gulp.task('browser-sync', function() {
     browserSync.init(['js/*.js'], {
         server: {
             baseDir: "./"
-        }
+        },
+        reloadDelay: 1000
     });
 });
 
