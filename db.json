@@ -14,55 +14,6 @@
       "id": 5,
       "userId": 2,
       "message": "Yo!"
-    },
-    {
-      "message": "Test",
-      "id": 6
-    },
-    {
-      "userId": 1,
-      "message": "yo",
-      "id": 7
-    },
-    {
-      "userId": 2,
-      "message": "yo yo",
-      "id": 8
-    },
-    {
-      "userId": 3,
-      "message": "yo yo yo",
-      "id": 9
-    },
-    {
-      "message": "sdfa",
-      "id": 10
-    },
-    {
-      "message": "afdf",
-      "id": 11
-    },
-    {
-      "message": "test",
-      "id": 12
-    },
-    {
-      "message": "sdsds",
-      "id": 13
-    },
-    {
-      "userId": 2,
-      "message": "It's me, the realKlanni!",
-      "id": 14
-    },
-    {
-      "userId": 3,
-      "message": "no way, it's me rockit!",
-      "id": 15
-    },
-    {
-      "message": "I'm nobody =(",
-      "id": 16
     }
   ],
   "replies": [
@@ -83,18 +34,6 @@
       "userId": 1,
       "tweetId": 5,
       "message": "@therealklanni What up!"
-    },
-    {
-      "userId": 2,
-      "tweetId": 2,
-      "message": "I do too!",
-      "id": 4
-    },
-    {
-      "userId": 1,
-      "tweetId": 8,
-      "message": "yo!",
-      "id": 5
     }
   ],
   "users": [

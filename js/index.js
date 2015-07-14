@@ -51,7 +51,10 @@ $(function () {
             postTweet(currentUser, $message, tweetsUrl);
         } else {
             var tweetId = $(this).parents('.thread').find('.tweet').attr('id');
-            postReply(currentUser, $message, repliesUrl, tweetId);
+            var replyHandle = '';
+            replyHandle = $(this).parents('.thread').find('.tweet:first-child .title').text();
+            console.log(replyHandle);
+            postReply(currentUser, $message, repliesUrl, tweetId, replyHandle);
         }
 
         $message = $parent.siblings('textarea').val('');   // resets textarea entry
@@ -67,10 +70,6 @@ $(function () {
         var $limitCount = $('textarea').siblings('div').children('.count');
 
         $limitCount.text(140 - ($msgCount));
-
-        console.log(currentUser);
-        console.log('what');
-
         
         if ($msgCount > 140) {
             $limitCount.css({"color": "red", "background-color": "pink"});
@@ -126,11 +125,11 @@ $(function () {
     }
 
     // post reply and render out reply tweet
-    function postReply(user, message, url, tweetId) {
+    function postReply(user, message, url, tweetId, replyHandle) {
         $.post(repliesUrl, {
             userId: user.id,
             tweetId: tweetId.slice(6),
-            message: message
+            message: replyHandle + ' ' + message
         }).done(function(data) {
             var html = renderTweet(user, data.message, data.id);
             $('#' + tweetId).siblings('.replies').append(html);
