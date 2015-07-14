@@ -13,6 +13,8 @@ $(function () {
     //     realName: 'Brad Westfall'
     // };
 
+    var currentUser = {};
+
     var repliesUrl = "http://localhost:3000/replies/";
     var tweetsUrl = "http://localhost:3000/tweets/";
     var usersUrl = "http://localhost:3000/users/";
@@ -25,14 +27,21 @@ $(function () {
     // console.log(currentUser);
 
     $('#user-select').change(function() {
-        var currentUser = $('#user-select').val();
+        var userSelected = $('#user-select').val();
+        console.log(userSelected);
+     });
 
-        $.getJSON(usersUrl + currentUser)
-            .done(function(userData) {
 
-            });
+    // function getUser(function(output) {
 
-    })
+    //     $.getJSON(usersUrl + currentUser)
+    //         .done(function(userData) {
+    //             return userData;
+    //         });
+    //     });
+    // });
+
+    // console.log(cUser);
 
     // Expand textareas for composing
     $('#main').on('click', 'form', function() {
