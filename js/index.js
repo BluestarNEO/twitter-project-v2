@@ -6,13 +6,6 @@ var $ = require('jquery');
 
 $(function () {
 
-    // var currentUser = {
-    //     id: 1,
-    //     img: '../images/brad.png',
-    //     handle: '@bradwestfall',
-    //     realName: 'Brad Westfall'
-    // };
-
     var currentUser = {};
 
     var repliesUrl = "http://localhost:3000/replies/";
@@ -23,25 +16,21 @@ $(function () {
     loadTweets();
     loadUsers();
 
-    // var currentUser = $('#user-select').val();
-    // console.log(currentUser);
+    // if (currentUser.isEmptyObject({})) {
+    //     $('button').attr('disabled', true);
+    // }
 
     $('#user-select').change(function() {
         var userSelected = $('#user-select').val();
         console.log(userSelected);
+        $.get(usersUrl + userSelected)
+            .done(function(data) {
+                currentUser = data;
+                console.log(currentUser);
+            })
      });
 
-
-    // function getUser(function(output) {
-
-    //     $.getJSON(usersUrl + currentUser)
-    //         .done(function(userData) {
-    //             return userData;
-    //         });
-    //     });
-    // });
-
-    // console.log(cUser);
+    console.log(currentUser);
 
     // Expand textareas for composing
     $('#main').on('click', 'form', function() {
@@ -53,7 +42,7 @@ $(function () {
         $(this).parent('.thread').toggleClass('expand');
     })  
 
-    // Compose Function when user creates a tweet
+    // Compose Function when user creates a tweet             // // // This doesn't work
     $('#main').on('click', '.compose button', function() {
         var $message = $(this).parents('.compose').find('textarea').val();
         var $parent = $(this).parent();
@@ -79,15 +68,25 @@ $(function () {
 
         $limitCount.text(140 - ($msgCount));
 
-        if ($msgCount > 140) {
-            $limitCount.css({"color": "red", "background-color": "pink"});
-            $(this).css({"color": "red"});
-            $(this).siblings('div').children('button').attr('disabled', true).css({"background-color": "rgba(46,154,194,0.4)"});
+        console.log(currentUser);
+        console.log('what');
 
+        if(currentUser.isEmptyObject({})){
+            $('#main').find('button').each(function() {
+                $(this).prop('disabled', true).css({"background-color": "#2E9AC2"});
+                console.log(this);
+            })
         } else {
-            $limitCount.css({"color": "#777", "background-color": "transparent"});
-            $(this).css({"color": "#777"});
-            $(this).siblings('div').children('button').attr('disabled', false).css({"background-color": "#2E9AC2"});
+            if ($msgCount > 140) {
+                $limitCount.css({"color": "red", "background-color": "pink"});
+                $(this).css({"color": "red"});
+                $(this).siblings('div').children('button').attr('disabled', true).css({"background-color": "rgba(46,154,194,0.4)"});
+
+            } else {
+                $limitCount.css({"color": "#777", "background-color": "transparent"});
+                $(this).css({"color": "#777"});
+                $(this).siblings('div').children('button').attr('disabled', false).css({"background-color": "#2E9AC2"});
+            }
         }
     })
 
@@ -169,7 +168,9 @@ $(function () {
             })
     };
 
+    // load all users into a select/option input and assign their corresponding ids as values
     function loadUsers() {
+        
         $.getJSON(usersUrl) 
             .done(function(users) {
                 users.forEach(function(user) {
@@ -177,6 +178,45 @@ $(function () {
                     return user;
                 })
             })
+    }
+
+    // Create new user in the database
+    function createUser(img, handle, realName) {
+        $.post(usersUrl, {
+            img: img,
+            handle: handle,
+            realName: realName
+        }).fail(function(err){
+            alert(err);
+            console.log('There was a problem creating a new user');
+        })
+    }
+
+    // manually update tweet
+    function updateTweet(id, userId, message) {
+        $.ajax({
+            url: tweetsUrl + id,
+            type: 'PUT',
+            data: {
+                id: id,
+                userId: userId,
+                message: message
+            }
+        })
+    }
+
+    // manually update reply
+    function updateReply(id, userId, tweetId, message) {
+        $.ajax({
+            url: repliesUrl + id,
+            type: 'PUT',
+            data: {
+                id: id,
+                userId: userId,
+                tweetId: tweetId,
+                message: message
+            }
+        })
     }
 
 });
