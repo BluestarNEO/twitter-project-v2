@@ -12,23 +12,18 @@ $(function () {
     var tweetsUrl = "http://localhost:3000/tweets/";
     var usersUrl = "http://localhost:3000/users/";
 
-    console.log('testing this');
-
     // Load existing database content on page
     loadTweets();
     loadUsers();
 
+    // Select user and load them into currentUser
     $('#user-select').change(function() {
         var userSelected = $('#user-select').val();
-        console.log(userSelected);
         $.get(usersUrl + userSelected)
             .done(function(data) {
                 currentUser = data;
-                console.log(currentUser);
             });
      });
-
-    console.log(currentUser);
 
     // Expand textareas for composing
     $('#main').on('click', 'form', function() {
@@ -80,7 +75,7 @@ $(function () {
             $(this).siblings('div').children('button').attr('disabled', false).css({"background-color": "#2E9AC2"});
         }
         
-    })
+    });
 
     // render out tweet body
     function renderTweet(user, message, id) {

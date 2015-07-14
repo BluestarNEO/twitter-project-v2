@@ -10,7 +10,7 @@ var uglify = require('gulp-uglify');
 var browserSync = require('browser-sync').create();
 
 gulp.task('default', ['lint'], function() {
-  
+    console.log('You have been linted!');
 });
 
 gulp.task('lint', function() {
