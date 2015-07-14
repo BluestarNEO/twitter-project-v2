@@ -12,13 +12,11 @@ $(function () {
     var tweetsUrl = "http://localhost:3000/tweets/";
     var usersUrl = "http://localhost:3000/users/";
 
+    console.log('reload works!');
+
     // Load existing database content on page
     loadTweets();
     loadUsers();
-
-    // if (currentUser.isEmptyObject({})) {
-    //     $('button').attr('disabled', true);
-    // }
 
     $('#user-select').change(function() {
         var userSelected = $('#user-select').val();

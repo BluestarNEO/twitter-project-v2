@@ -7,6 +7,7 @@ var gutil = require('gulp-util');
 var jshint = require('gulp-jshint');
 var del = require('del');
 var uglify = require('gulp-uglify');
+var browserSync = require('browser-sync').create();
 
 
 gulp.task('default', ['lint'], function() {
@@ -23,15 +24,25 @@ gulp.task('clean', function(cb) {
   del('./js/bundle.js', cb);
 });
 
-gulp.task('watch', function() {
-  return gulp.watch(['./js/*.js', '!./js/bundle.js'], ['build']);
+gulp.task('watch', ['browser-sync'], function() {
+  return gulp.watch(['./js/*.js', '!./js/bundle.js'], ['js-watch']);
 });
 
 gulp.task('uglify', ['build'], function() {
   return gulp.src('./js/bundle.js')
     .pipe(uglify())
     .pipe(gulp.dest('js'));
-})
+});
+
+gulp.task('js-watch', ['build'], browserSync.reload);
+
+gulp.task('browser-sync', function() {
+    browserSync.init(['js/*.js'], {
+        server: {
+            baseDir: "./"
+        }
+    });
+});
 
 
 // Browserify
@@ -78,4 +89,4 @@ gulp.task('serve:web', serve({
   port: 8000
 }));
 
-gulp.task('serve', ['serve:api', 'serve:web'])
+gulp.task('serve', ['serve:api', 'serve:web']);
