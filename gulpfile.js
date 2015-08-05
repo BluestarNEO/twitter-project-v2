@@ -14,7 +14,7 @@ gulp.task('default', ['lint'], function() {
 });
 
 gulp.task('lint', function() {
-  return gulp.src('./js/*.js')
+  return gulp.src(['./js/*.js', '!./js/bundle.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
 })

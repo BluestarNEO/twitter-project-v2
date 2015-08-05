@@ -8,6 +8,7 @@ $(function () {
 
   // User is set to empty by default
   var currentUser = {};
+  var getUsers = $.get(apiUrl + 'users');
 
   // Load existing database content on page
   loadTweets();
@@ -225,7 +226,7 @@ $(function () {
 
   // load all users into a select/option input and assign their corresponding ids as values
   function loadUsers() {    
-    $.getJSON(apiUrl + 'users') 
+    getUsers
       .done(function(users) {
         users.forEach(function(user) {
           $('#user-select').append('<option value ="' + user.id + '">' + user.handle + '</option>')
